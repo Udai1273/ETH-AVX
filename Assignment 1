@@ -1,0 +1,23 @@
+pragma solidity ^0.8.13;
+contract Modifier {
+
+
+    function requireUse(uint some) public pure{
+        require(some==10,"the input must be 10");
+    }
+
+
+    function revertUse(uint some) public pure{
+        if(some!=10){
+            revert("Input must be 10");
+        }
+    }
+
+    uint temp=0;
+    function assertUse() public view{
+        assert(temp==0);
+    }
+    
+
+
+}
