@@ -1,23 +1,38 @@
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
 contract Modifier {
+    uint public balance=0;
+    address public owner;
 
-
-    function requireUse(uint some) public pure{
-        require(some==10,"the input must be 10");
+    constructor() {
+        owner = msg.sender;
     }
 
-
-    function revertUse(uint some) public pure{
-        if(some!=10){
-            revert("Input must be 10");
-        }
+    modifier ownerOnly() {
+        require(msg.sender == owner, "Only the owner can call this function");
+        _;
     }
 
-    uint temp=0;
-    function assertUse() public view{
-        assert(temp==0);
+    function deposit(uint val) public payable {
+        require(val > 0, "amount must be greater than zero");
+        balance += val;
     }
-    
+
+    function withdraw(uint256 amount) public ownerOnly {
+        require(amount <= balance, "Insufficient balance to withdraw");
+
+        uint256 oldBalance = balance;
+        balance -= amount;
+
+        assert(balance == oldBalance - amount);
+
+        payable(owner).transfer(amount);
+    }
+
+    function triggerRevert() public pure {
+        revert("This function always reverts");
+    }
 
 
 }
