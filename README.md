@@ -1,6 +1,6 @@
 # Error Handling
 
-This Solidity program is a simple "Error Handling" program that demonstrates the use of three main error handling function in Solidity.
+This Solidity program is a simple "Error Handling" program that demonstrates the use of three main error handling function in Solidity .
 
 ## Description
 
@@ -18,29 +18,43 @@ To run this program, you can use Remix, an online Solidity IDE. To get started, 
 Once you are on the Remix website, create a new file by clicking on the "+" icon in the left-hand sidebar. Save the file with a .sol extension (e.g., ErrorHandling.sol). Copy and paste the following code into the file:
 
 ```javascript
-pragma solidity ^0.8.13;
-contract ErrorHandling {
+pragma solidity ^0.8.0;
 
+contract Modifier {
+    uint public balance=0;
+    address public owner;
 
-    function requireUse(uint some) public pure{
-        require(some==10,"the input must be 10");
+    constructor() {
+        owner = msg.sender;
     }
 
-
-    function revertUse(uint some) public pure{
-        if(some!=10){
-            revert("Input must be 10");
-        }
+    modifier ownerOnly() {
+        require(msg.sender == owner, "Only the owner can call this function");
+        _;
     }
 
-    uint temp=0;
-    function assertUse() public view{
-        assert(temp==0);
+    function deposit(uint val) public payable {
+        require(val > 0, "amount must be greater than zero");
+        balance += val;
     }
-    
+
+    function withdraw(uint256 amount) public ownerOnly {
+        require(amount <= balance, "Insufficient balance to withdraw");
+
+        uint256 oldBalance = balance;
+        balance -= amount;
+
+        assert(balance == oldBalance - amount);
+
+    }
+
+    function triggerRevert() public pure {
+        revert("This function always reverts");
+    }
 
 
 }
+
 
 ```
 
