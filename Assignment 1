@@ -26,7 +26,6 @@ contract Modifier {
 
         assert(balance == oldBalance - amount);
 
-        payable(owner).transfer(amount);
     }
 
     function triggerRevert() public pure {
